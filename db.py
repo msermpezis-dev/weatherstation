@@ -11,6 +11,15 @@ class Database:
 
     cursor = cnx.cursor()
 
+    def get_last_row_sensor_data(self):
+        self.cursor.execute("SELECT id, temperature, humidity, timestamp FROM sensor "
+                            "ORDER BY id DESC LIMIT 1;")
+        return self.cursor
+    def get_last_sensor_data(self):
+        self.cursor.execute("SELECT id, temperature, humidity, timestamp FROM sensor "
+                            "WHERE timestamp BETWEEN(DATE_SUB(NOW(), INTERVAL 5 MINUTE)) AND NOW();")
+        return self.cursor
+
     def get_sensor_data(self):
         self.cursor.execute("SELECT id, temperature, humidity, timestamp FROM sensor")
         return self.cursor
