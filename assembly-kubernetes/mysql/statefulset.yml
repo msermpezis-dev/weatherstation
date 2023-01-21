@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+ name: sensor-mysql
+spec:
+ selector:
+   matchLabels:
+     app: sensor-mysql
+ serviceName: sensor-mysql
+ replicas: 1
+ template:
+   metadata:
+     labels:
+       app: sensor-mysql
+   spec:
+     terminationGracePeriodSeconds: 10
+     containers:
+     - name: sensor-mysql
+       image: mysql:latest
+       ports:
+       - containerPort: 3306
+         name: sensor-mysql
+       env:
+       - name: MYSQL_ROOT_PASSWORD
+         valueFrom:
+           secretKeyRef:
+             name: mysqlpwd
+             key: password
+       - name: MYSQL_DATABASE
+         value: "sensor_db"
+       volumeMounts:
+       - name: mysql-initdb
+         mountPath: /docker-entrypoint-initdb.d
+     volumes:
+     - name: mysql-initdb
+       configMap:
+         name: mysql-initdb-config

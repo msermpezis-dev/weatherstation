@@ -56,7 +56,7 @@ def get_last_sensor_data():
     return jsonify(data_json)
 
 
-@app.route('/api/getsensordata', methods=['GET', 'POST'])
+@app.route('/api/getsensordata', methods=['GET'])
 def get_sensor_data():
     data = Database().get_sensor_data()
     ids = []
@@ -75,7 +75,9 @@ def get_sensor_data():
         'timestamps': timestamps,
         'Status Code': 200
     }
-    return jsonify(data_json)
+    response = flask.jsonify(data_json)
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
 
 
 @app.route('/api/addsensordata', methods=['GET', 'POST'])
