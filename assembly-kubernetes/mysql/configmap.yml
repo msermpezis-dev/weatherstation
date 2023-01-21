@@ -4,6 +4,8 @@ metadata:
   name: mysql-initdb-config
 data:
   initdb.sql: |
-    CREATE TABLE sensor ( id int(11) NOT NULL, temperature double NOT NULL, humidity double NOT NULL,
+    CREATE TABLE sensor ( 
+    id int(11) AUTO_INCREMENT primary key NOT NULL, 
+    temperature double NOT NULL, humidity double NOT NULL,
     timestamp datetime NOT NULL DEFAULT current_timestamp()
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;

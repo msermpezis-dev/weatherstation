@@ -29,7 +29,7 @@ class LCD1602:
     def show_on_screen(self):
         try:
 
-            response = requests.get('http://192.168.1.50:5000/api/getlastsensordata', timeout=5).json()
+            response = requests.get('http://192.168.1.181:5000/api/getlastsensordata', timeout=5).json()
             humidities = response["humidities"]
             temperatures = response["temperatures"]
             if len(humidities) > 0 and len(temperatures) > 0:

@@ -20,7 +20,7 @@ class DHTsensor:
             data = {"temperature": temperature_c,
                     "humidity": humidity
                     }
-            requests.post('http://192.168.1.50:5000/api/addsensordata',
+            response = requests.post('http://192.168.1.181:5000/api/addsensordata',
                                      timeout=5, verify=False, json=data)
         except RuntimeError as error:
             # Errors happen fairly often, DHT's are hard to read, just keep going
