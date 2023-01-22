@@ -28,6 +28,8 @@ spec:
              key: password
        - name: MYSQL_DATABASE
          value: "sensor_db"
+       - name: TZ
+         value: "Europe/Athens"
        volumeMounts:
        - name: mysql-initdb
          mountPath: /docker-entrypoint-initdb.d

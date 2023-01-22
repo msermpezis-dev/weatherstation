@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: sensor-nginx-deployment
+  name: sensor-apache-deployment
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: sensor-nginx
+      app: sensor-apache
   template:
     metadata:
       labels:
-        app: sensor-nginx
+        app: sensor-apache
     spec:
       containers:
-      - name: sensor-nginx
-        image: msermpezis/sensor-nginx:latest
+      - name: sensor-apache
+        image: msermpezis/sensor-apache:latest
         ports:
         - containerPort: 80

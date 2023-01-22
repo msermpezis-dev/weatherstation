@@ -1,0 +1,49 @@
+<html>
+<head>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript">
+	google.charts.load('current', {'packages':['corechart']});
+	google.charts.setOnLoadCallback(drawChart);
+
+	
+	function drawChart() {
+	$.getJSON('http://192.168.1.181:5000/api/getlastdaysensordata', function(json_data) {
+		var temp_graph = [['Hour', 'Temperature']];
+		var humi_graph = [['Hour', 'Humidity']];
+		for (var i = 0; i < json_data.days.length; i++) {
+		temp_graph.push([json_data.hours[i], json_data.temperatures[i]]);
+		humi_graph.push([json_data.hours[i], json_data.humidities[i]]);
+		}
+	var temp_data = google.visualization.arrayToDataTable(temp_graph);
+	var humi_data = google.visualization.arrayToDataTable(humi_graph);
+	var temp_options = {
+		title: 'Room Temperature',
+		hAxis: {title: 'Hour'},
+		vAxis: {title: 'Temperature'},
+		curveType: 'function',
+		colors: ['red'],
+		legend: { position: 'right' }
+	};
+	var humi_options = {
+		title: 'Room Humidity',
+		hAxis: {title: 'Hour'},
+		vAxis: {title: 'Humidity'},
+		curveType: 'function',
+		colors: ['blue'],
+		legend: { position: 'right' }
+		};
+	var temp_chart = new google.visualization.LineChart(document.getElementById('temp_chart'));
+	var humi_chart = new google.visualization.LineChart(document.getElementById('humi_chart'));
+	temp_chart.draw(temp_data, temp_options);
+	humi_chart.draw(humi_data, humi_options);
+	});
+	
+	}
+</script>
+</head>
+<body>
+<div id="temp_chart" style="width: 700; height: 300px"></div>
+<div id="humi_chart" style="width: 700; height: 300px"></div>
+</body>
+</html>

@@ -21,13 +21,20 @@ class Database:
                             "WHERE timestamp BETWEEN(DATE_SUB(NOW(), INTERVAL 5 MINUTE)) AND NOW();")
         return self.cursor
 
+    def get_last_day_sensor_data(self):
+        self.cursor.execute("SELECT AVG(temperature), AVG(humidity), hour( timestamp ), DAY( timestamp ) "
+                            "FROM sensor "
+                            "WHERE timestamp BETWEEN(DATE_SUB(NOW(), INTERVAL 5 DAY)) AND NOW() "
+                            "GROUP BY hour( timestamp ), DAY( timestamp );")
+        return self.cursor
+
     def get_sensor_data(self):
-        self.cursor.execute("SELECT id, temperature, humidity, DAY(timestamp) FROM sensor")
+        self.cursor.execute("SELECT id, temperature, humidity, DAY(timestamp) FROM sensor;")
         return self.cursor
 
     def insert_sensor_data(self, temperature, humidity):  # insert data into UserData table
         self.cursor.execute("INSERT INTO sensor (temperature, humidity) "
-                            "VALUES(%s, %s)",
+                            "VALUES(%s, %s);",
                             (temperature, humidity,))
         self.cnx.commit()
 

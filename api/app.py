@@ -12,7 +12,7 @@ def home():
                 <p>A flask api implementation for book information.   </p>'''
 
 
-@app.route('/api/getlastrowsensordata', methods=['GET', 'POST'])
+@app.route('/api/getlastrowsensordata', methods=['GET'])
 def get_last_row_sensor_data():
     data = Database().get_last_row_sensor_data()
     ids = []
@@ -34,7 +34,7 @@ def get_last_row_sensor_data():
     return jsonify(data_json)
 
 
-@app.route('/api/getlastsensordata', methods=['GET', 'POST'])
+@app.route('/api/getlastsensordata', methods=['GET'])
 def get_last_sensor_data():
     data = Database().get_last_sensor_data()
     ids = []
@@ -54,6 +54,30 @@ def get_last_sensor_data():
         'Status Code': 200
     }
     return jsonify(data_json)
+
+
+@app.route('/api/getlastdaysensordata', methods=['GET'])
+def get_last_day_sensor_data():
+    data = Database().get_last_day_sensor_data()
+    hours = []
+    days = []
+    temperatures = []
+    humidities = []
+    for (temperature, humidity, hour, day) in data:
+        hours.append(str(hour) + ":00")
+        days.append(str(day) + ":00")
+        temperatures.append(round(temperature, 2))
+        humidities.append(round(humidity, 2))
+    data_json = {
+        'hours': hours,
+        'days': days,
+        'temperatures': temperatures,
+        'humidities': humidities,
+        'Status Code': 200
+    }
+    response = flask.jsonify(data_json)
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
 
 
 @app.route('/api/getsensordata', methods=['GET'])
