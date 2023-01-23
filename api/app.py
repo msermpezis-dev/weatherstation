@@ -14,7 +14,8 @@ def home():
 
 @app.route('/api/getlastrowsensordata', methods=['GET'])
 def get_last_row_sensor_data():
-    data = Database().get_last_row_sensor_data()
+    db = Database()
+    data = db.get_last_row_sensor_data()
     ids = []
     temperatures = []
     humidities = []
@@ -36,7 +37,8 @@ def get_last_row_sensor_data():
 
 @app.route('/api/getlastsensordata', methods=['GET'])
 def get_last_sensor_data():
-    data = Database().get_last_sensor_data()
+    db = Database()
+    data = db.get_last_sensor_data()
     ids = []
     temperatures = []
     humidities = []
@@ -58,14 +60,40 @@ def get_last_sensor_data():
 
 @app.route('/api/getlastdaysensordata', methods=['GET'])
 def get_last_day_sensor_data():
-    data = Database().get_last_day_sensor_data()
+    db = Database()
+    data = db.get_last_day_sensor_data()
     hours = []
     days = []
     temperatures = []
     humidities = []
     for (temperature, humidity, hour, day) in data:
         hours.append(str(hour) + ":00")
-        days.append(str(day) + ":00")
+        days.append(str(day))
+        temperatures.append(round(temperature, 2))
+        humidities.append(round(humidity, 2))
+    data_json = {
+        'hours': hours,
+        'days': days,
+        'temperatures': temperatures,
+        'humidities': humidities,
+        'Status Code': 200
+    }
+    response = flask.jsonify(data_json)
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
+
+
+@app.route('/api/getlastweeksensordata', methods=['GET'])
+def get_last_week_sensor_data():
+    db = Database()
+    data = db.get_last_week_sensor_data()
+    hours = []
+    days = []
+    temperatures = []
+    humidities = []
+    for (temperature, humidity, hour, day) in data:
+        hours.append(str(hour) + ":00")
+        days.append(str(day))
         temperatures.append(round(temperature, 2))
         humidities.append(round(humidity, 2))
     data_json = {
@@ -82,7 +110,8 @@ def get_last_day_sensor_data():
 
 @app.route('/api/getsensordata', methods=['GET'])
 def get_sensor_data():
-    data = Database().get_sensor_data()
+    db = Database()
+    data = db.get_sensor_data()
     ids = []
     temperatures = []
     humidities = []
@@ -104,8 +133,9 @@ def get_sensor_data():
     return response
 
 
-@app.route('/api/addsensordata', methods=['GET', 'POST'])
+@app.route('/api/addsensordata', methods=['POST'])
 def add_sensor_data():
+    db = Database()
     postedData = request.get_json()
     temperature = postedData["temperature"]
     humidity = postedData["humidity"]

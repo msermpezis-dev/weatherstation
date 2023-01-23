@@ -26,10 +26,13 @@ class LCD1602:
     lcd = characterlcd.Character_LCD_Mono(lcd_rs, lcd_en, lcd_d4, lcd_d5, lcd_d6,
                                           lcd_d7, lcd_columns, lcd_rows)
 
+    public_ip = ""
+
     def show_on_screen(self):
         try:
 
-            response = requests.get('http://192.168.1.181:5000/api/getlastsensordata', timeout=5).json()
+            response = requests.get('http://' + self.public_ip + ':5000/api/getlastsensordata', timeout=5,
+                                    verify=False).json()
             humidities = response["humidities"]
             temperatures = response["temperatures"]
             if len(humidities) > 0 and len(temperatures) > 0:
@@ -42,8 +45,10 @@ class LCD1602:
             elif len(response["ids"]) == 0:
                 self.calibrate()
         except requests.exceptions.Timeout:
+            print("Timeout error")
             self.timeout()
-        except requests.exceptions:
+        except Exception as e:
+            print(e)
             self.timeout()
 
     def start(self):

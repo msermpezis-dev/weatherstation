@@ -8,6 +8,9 @@ import requests
 from lcd1602 import LCD1602
 
 class DHTsensor:
+
+    public_ip = ""
+
     def __init__(self):
         self.dhtDevice = adafruit_dht.DHT22(board.D4)
 
@@ -20,14 +23,15 @@ class DHTsensor:
             data = {"temperature": temperature_c,
                     "humidity": humidity
                     }
-            response = requests.post('http://192.168.1.181:5000/api/addsensordata',
+            response = requests.post('http://' + self.public_ip + ':5000/api/addsensordata',
                                      timeout=5, verify=False, json=data)
         except RuntimeError as error:
             # Errors happen fairly often, DHT's are hard to read, just keep going
             print(error.args[0])
             time.sleep(2.0)
         except requests.exceptions.Timeout:
+            print("Timeout error")
             LCD1602().timeout()
-        except Exception as error:
-            self.dhtDevice.exit()
-            raise error
+        except Exception as e:
+            print(e)
+            LCD1602().timeout()    

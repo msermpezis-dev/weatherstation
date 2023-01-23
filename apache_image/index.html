@@ -8,42 +8,83 @@
 
 	
 	function drawChart() {
-	$.getJSON('http://192.168.1.181:5000/api/getlastdaysensordata', function(json_data) {
-		var temp_graph = [['Hour', 'Temperature']];
-		var humi_graph = [['Hour', 'Humidity']];
-		for (var i = 0; i < json_data.days.length; i++) {
-		temp_graph.push([json_data.hours[i], json_data.temperatures[i]]);
-		humi_graph.push([json_data.hours[i], json_data.humidities[i]]);
-		}
-	var temp_data = google.visualization.arrayToDataTable(temp_graph);
-	var humi_data = google.visualization.arrayToDataTable(humi_graph);
-	var temp_options = {
-		title: 'Room Temperature',
-		hAxis: {title: 'Hour'},
-		vAxis: {title: 'Temperature'},
-		curveType: 'function',
-		colors: ['red'],
-		legend: { position: 'right' }
-	};
-	var humi_options = {
-		title: 'Room Humidity',
-		hAxis: {title: 'Hour'},
-		vAxis: {title: 'Humidity'},
-		curveType: 'function',
-		colors: ['blue'],
-		legend: { position: 'right' }
-		};
-	var temp_chart = new google.visualization.LineChart(document.getElementById('temp_chart'));
-	var humi_chart = new google.visualization.LineChart(document.getElementById('humi_chart'));
-	temp_chart.draw(temp_data, temp_options);
-	humi_chart.draw(humi_data, humi_options);
-	});
+	    var public_ip = '';
+
+        console.log('http://' + public_ip + ':5000/api/getlastdaysensordata');
+        $.getJSON('http://' + public_ip + ':5000/api/getlastdaysensordata', function(json_data) {
+            var temp_day_graph = [['Hour', 'Temperature']];
+            var humi_day_graph = [['Hour', 'Humidity']];
+            for (var i = 0; i < json_data.days.length; i++) {
+                temp_day_graph.push([json_data.hours[i], json_data.temperatures[i]]);
+                humi_day_graph.push([json_data.hours[i], json_data.humidities[i]]);
+            }
+            var temp_data = google.visualization.arrayToDataTable(temp_day_graph);
+            var humi_data = google.visualization.arrayToDataTable(humi_day_graph);
+            var temp_options = {
+                title: 'Room Temperature Day',
+                hAxis: {title: 'Hour'},
+                vAxis: {title: 'Temperature'},
+                curveType: 'function',
+                colors: ['red'],
+                legend: { position: 'right' }
+            };
+            var humi_options = {
+                title: 'Room Humidity Day',
+                hAxis: {title: 'Hour'},
+                vAxis: {title: 'Humidity'},
+                curveType: 'function',
+                colors: ['blue'],
+                legend: { position: 'right' }
+                };
+            var temp_day_chart = new google.visualization.LineChart(document.getElementById('temp_day_chart'));
+            var humi_day_chart = new google.visualization.LineChart(document.getElementById('humi_day_chart'));
+            temp_day_chart.draw(temp_data, temp_options);
+            humi_day_chart.draw(humi_data, humi_options);
+
+        });
+
+
+        $.getJSON('http://' + public_ip + ':5000/api/getlastweeksensordata', function(json_data) {
+            var temp_week_graph = [['Hour', 'Temperature']];
+            var humi_week_graph = [['Hour', 'Humidity']];
+            for (var i = 0; i < json_data.days.length; i++) {
+                temp_week_graph.push([json_data.hours[i], json_data.temperatures[i]]);
+                humi_week_graph.push([json_data.hours[i], json_data.humidities[i]]);
+            }
+
+            var temp_data = google.visualization.arrayToDataTable(temp_week_graph);
+            var humi_data = google.visualization.arrayToDataTable(humi_week_graph);
+            var temp_options = {
+                title: 'Room Temperature Week',
+                hAxis: {title: 'Hour'},
+                vAxis: {title: 'Temperature'},
+                curveType: 'function',
+                colors: ['red'],
+                legend: { position: 'right' }
+                };
+            var humi_options = {
+                title: 'Room Humidity Week',
+                hAxis: {title: 'Hour'},
+                vAxis: {title: 'Humidity'},
+                curveType: 'function',
+                colors: ['blue'],
+                legend: { position: 'right' }
+                };
+
+            var temp_week_chart = new google.visualization.LineChart(document.getElementById('temp_week_chart'));
+            var humi_week_chart = new google.visualization.LineChart(document.getElementById('humi_week_chart'));
+            temp_week_chart.draw(temp_data, temp_options);
+            humi_week_chart.draw(humi_data, humi_options);
+        });
 	
 	}
 </script>
 </head>
 <body>
-<div id="temp_chart" style="width: 700; height: 300px"></div>
-<div id="humi_chart" style="width: 700; height: 300px"></div>
+<div id="temp_day_chart" style="width: 700; height: 300px"></div>
+<div id="humi_day_chart" style="width: 700; height: 300px"></div>
+<br>
+<div id="temp_week_chart" style="width: 700; height: 300px"></div>
+<div id="humi_week_chart" style="width: 700; height: 300px"></div>
 </body>
 </html>

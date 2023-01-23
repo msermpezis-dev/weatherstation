@@ -2,14 +2,19 @@ import mysql.connector
 
 
 class Database:
-    cnx = mysql.connector.connect(
-        host="192.168.1.182",
-        database="sensor_db",
-        user="root",
-        password="jC$#avKd9&c3#z"
-    )
+    def __init__(self):
+        config = {
+            "host": "192.168.1.182",
+            "database": "sensor_db",
+            "user": "root",
+            "password": "jC$#avKd9&c3#z",
+            'raise_on_warnings': True, }
+        self.cnx = mysql.connector.connect(**config)
+        self.cursor = self.cnx.cursor()
 
-    cursor = cnx.cursor()
+    def __del__(self):
+        self.cnx.close()
+        self.cursor.close()
 
     def get_last_row_sensor_data(self):
         self.cursor.execute("SELECT id, temperature, humidity, DAY(timestamp) FROM sensor "
@@ -24,7 +29,14 @@ class Database:
     def get_last_day_sensor_data(self):
         self.cursor.execute("SELECT AVG(temperature), AVG(humidity), hour( timestamp ), DAY( timestamp ) "
                             "FROM sensor "
-                            "WHERE timestamp BETWEEN(DATE_SUB(NOW(), INTERVAL 5 DAY)) AND NOW() "
+                            "WHERE timestamp BETWEEN(DATE_SUB(NOW(), INTERVAL 1 DAY)) AND NOW() "
+                            "GROUP BY hour( timestamp ), DAY( timestamp );")
+        return self.cursor
+
+    def get_last_week_sensor_data(self):
+        self.cursor.execute("SELECT AVG(temperature), AVG(humidity), hour( timestamp ), DAY( timestamp ) "
+                            "FROM sensor "
+                            "WHERE timestamp BETWEEN(DATE_SUB(NOW(), INTERVAL 7 DAY)) AND NOW() "
                             "GROUP BY hour( timestamp ), DAY( timestamp );")
         return self.cursor
 
@@ -38,7 +50,4 @@ class Database:
                             (temperature, humidity,))
         self.cnx.commit()
 
-    def db_close(self):
-        self.cursor.close()
-        self.cnx.close()
 
